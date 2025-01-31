@@ -49,23 +49,33 @@ function addQuote() {
 }
 
 function exportToJsonFile() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(quotes));
+  const jsonData = JSON.stringify(quotes, null, 2); // Pretty-print JSON
+  const blob = new Blob([jsonData], { type: "application/json" }); // Correct MIME type
+  const url = URL.createObjectURL(blob);
+  
   const downloadAnchor = document.createElement("a");
-  downloadAnchor.setAttribute("href", dataStr);
-  downloadAnchor.setAttribute("download", "quotes.json");
+  downloadAnchor.href = url;
+  downloadAnchor.download = "quotes.json";
   document.body.appendChild(downloadAnchor);
   downloadAnchor.click();
+  
+  URL.revokeObjectURL(url); // Clean up memory
   document.body.removeChild(downloadAnchor);
 }
 
 function importFromJsonFile(event) {
   const fileReader = new FileReader();
   fileReader.onload = function(event) {
-      const importedQuotes = JSON.parse(event.target.result);
-      quotes.push(...importedQuotes);
-      saveQuotes();
-      updateCategoryOptions();
-      alert('Quotes imported successfully!');
+      try {
+          const importedQuotes = JSON.parse(event.target.result);
+          if (!Array.isArray(importedQuotes)) throw new Error("Invalid JSON format.");
+          quotes.push(...importedQuotes);
+          saveQuotes();
+          updateCategoryOptions();
+          alert("Quotes imported successfully!");
+      } catch (error) {
+          alert("Error importing quotes: Invalid JSON format.");
+      }
   };
   fileReader.readAsText(event.target.files[0]);
 }
