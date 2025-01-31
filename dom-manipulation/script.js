@@ -41,7 +41,19 @@ const quotes = [
     }
   }
   
+  function createAddQuoteForm() {
+    const formContainer = document.createElement("div");
+    formContainer.innerHTML = `
+      <h2>Add a New Quote</h2>
+      <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+      <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+      <button id="addQuoteButton">Add Quote</button>
+    `;
+    document.body.appendChild(formContainer);
+    document.getElementById("addQuoteButton").addEventListener("click", addQuote);
+  }
+  
   document.getElementById("newQuote").addEventListener("click", showRandomQuote);
-  document.querySelector("button[onclick='addQuote()']").addEventListener("click", addQuote);
+  createAddQuoteForm();
   updateCategoryOptions();
   
