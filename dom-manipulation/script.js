@@ -28,16 +28,20 @@ const quotes = [
   }
   
   function addQuote() {
-    const newText = document.getElementById("newQuoteText").value;
-    const newCategory = document.getElementById("newQuoteCategory").value;
+    const newText = document.getElementById("newQuoteText").value.trim();
+    const newCategory = document.getElementById("newQuoteCategory").value.trim();
     if (newText && newCategory) {
       quotes.push({ text: newText, category: newCategory });
       updateCategoryOptions();
       document.getElementById("newQuoteText").value = "";
       document.getElementById("newQuoteCategory").value = "";
+      alert("Quote added successfully!");
+    } else {
+      alert("Please enter both a quote and a category.");
     }
   }
   
   document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+  document.querySelector("button[onclick='addQuote()']").addEventListener("click", addQuote);
   updateCategoryOptions();
   
