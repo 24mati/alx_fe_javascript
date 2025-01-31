@@ -48,9 +48,26 @@ function addQuote() {
   }
 }
 
+// ✅ Ensure this function is included and doesn't conflict
+function createAddQuoteForm() {
+  if (document.getElementById("addQuoteForm")) return; // Prevent duplicate forms
+
+  const formContainer = document.createElement("div");
+  formContainer.id = "addQuoteForm";
+  formContainer.innerHTML = `
+      <h2>Add a New Quote</h2>
+      <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+      <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+      <button id="addQuoteButton">Add Quote</button>
+  `;
+  document.body.appendChild(formContainer);
+  
+  document.getElementById("addQuoteButton").addEventListener("click", addQuote);
+}
+
 function exportToJsonFile() {
-  const jsonData = JSON.stringify(quotes, null, 2); // Pretty-print JSON
-  const blob = new Blob([jsonData], { type: "application/json" }); // Correct MIME type
+  const jsonData = JSON.stringify(quotes, null, 2);
+  const blob = new Blob([jsonData], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   
   const downloadAnchor = document.createElement("a");
@@ -59,7 +76,7 @@ function exportToJsonFile() {
   document.body.appendChild(downloadAnchor);
   downloadAnchor.click();
   
-  URL.revokeObjectURL(url); // Clean up memory
+  URL.revokeObjectURL(url);
   document.body.removeChild(downloadAnchor);
 }
 
@@ -85,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("addQuoteButton")?.addEventListener("click", addQuote);
   document.getElementById("exportQuotes")?.addEventListener("click", exportToJsonFile);
   
+  createAddQuoteForm(); // ✅ Ensure this is included
   updateCategoryOptions();
   
   const lastViewedQuote = sessionStorage.getItem("lastViewedQuote");
