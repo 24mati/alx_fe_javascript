@@ -32,10 +32,23 @@ function addQuote() {
   const newQuoteCategory = document.getElementById('newQuoteCategory').value;
   
   if (newQuoteText && newQuoteCategory) {
-    quotes.push({ text: newQuoteText, category: newQuoteCategory });
+    const newQuote = { text: newQuoteText, category: newQuoteCategory };
+    quotes.push(newQuote);
     saveQuotes();
     populateCategories();
     showRandomQuote();
+    
+    // Send new quote to server
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newQuote),
+    })
+    .then(response => response.json())
+    .then(data => console.log('Quote saved to server:', data))
+    .catch(error => console.error('Error saving quote:', error));
   } else {
     alert("Please enter both quote text and category.");
   }
@@ -87,6 +100,19 @@ async function fetchQuotesFromServer() {
     console.error("Error fetching quotes from server:", error);
     alert('Failed to sync with server.');
   }
+}
+
+// Function to export quotes as JSON
+function exportQuotesAsJson() {
+  const dataStr = JSON.stringify(quotes, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "quotes.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 // Event listeners
