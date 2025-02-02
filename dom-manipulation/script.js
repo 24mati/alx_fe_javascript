@@ -115,6 +115,25 @@ function exportQuotesAsJson() {
   document.body.removeChild(a);
 }
 
+// Function to import quotes from JSON file
+function importFromJsonFile(event) {
+  const fileReader = new FileReader();
+  fileReader.onload = function(event) {
+    const importedQuotes = JSON.parse(event.target.result);
+    quotes.push(...importedQuotes);
+    saveQuotes();
+    populateCategories();
+    alert('Quotes imported successfully!');
+  };
+  fileReader.readAsText(event.target.files[0]);
+}
+
+// Function to sync quotes with server periodically
+async function syncQuotes() {
+  await fetchQuotesFromServer();
+  console.log("Quotes synced with server.");
+}
+
 // Event listeners
 document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 
@@ -124,4 +143,5 @@ document.addEventListener('DOMContentLoaded', () => {
   showRandomQuote();
   filterQuotes();
   fetchQuotesFromServer();
+  setInterval(syncQuotes, 60000); // Sync quotes every 60 seconds
 });
