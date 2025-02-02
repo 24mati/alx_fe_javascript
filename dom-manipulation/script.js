@@ -131,7 +131,8 @@ function importFromJsonFile(event) {
 // Function to sync quotes with server periodically
 async function syncQuotes() {
   await fetchQuotesFromServer();
-  console.log("Quotes synced with server.");
+  console.log("Quotes synced with server!");
+  alert("Quotes synced with server!");
 }
 
 // Event listeners
